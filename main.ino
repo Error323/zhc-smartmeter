@@ -87,7 +87,8 @@ void setup()
 void loop()
 {
   uint32_t now = timer_tick_count;
-  static int i = 0, j = 0;
+  static uint8_t i = 0;
+  static uint8_t j = 0;
   static bool done = false;
   char c;
 
@@ -97,6 +98,9 @@ void loop()
     next_mac_tick = now + 1;
     tinymac_tick_handler(NULL);
   }
+
+  // Call the tinyhan phy event handler whenever possible
+  phy_event_handler();
 
   // if we are done parsing all the values from the telegram we can send the
   // data
@@ -136,7 +140,4 @@ void loop()
 
     i %= MAX_TELEGRAM_SIZE;
   }
-
-  // Call the tinyhan phy event handler whenever possible
-  phy_event_handler();
 }
