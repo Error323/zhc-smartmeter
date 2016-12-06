@@ -41,12 +41,14 @@ void parse_obis(int i)
   if (!result)
     return;
   
+  pos += ms.MatchStart;
+  String s = telegram.substring(pos, pos + ms.MatchLength);
   switch (i)
   {
-    case 0: msg.gas_used_total = telegram.substring(ms.MatchStart, ms.MatchLength).toFloat(); break;
-    case 1: msg.kw_used_current = telegram.substring(ms.MatchStart, ms.MatchLength).toFloat(); break;
-    case 2: msg.kw_returned_current = telegram.substring(ms.MatchStart, ms.MatchLength).toFloat(); break;
-    case 3: msg.kw_tariff_current = telegram.substring(ms.MatchStart, ms.MatchLength).toInt(); break;
+    case 0: msg.gas_used_total = s.toFloat(); break;
+    case 1: msg.kw_used_current = s.toFloat(); break;
+    case 2: msg.kw_returned_current = s.toFloat(); break;
+    case 3: msg.kw_tariff_current = s.toInt(); break;
     default: return;
   }
 }
