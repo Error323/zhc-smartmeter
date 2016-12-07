@@ -26,10 +26,12 @@ char obis[16];
 telegram_t msg;
 MatchState ms;
 
+
 void tick()
 {
 	timer_tick_count++;
 }
+
 
 void parse_obis(int i)
 {
@@ -38,7 +40,7 @@ void parse_obis(int i)
   ms.Target(&telegram[pos]);
   char result;
   
-  if (i < 3)
+  if (i < 7)
     result = ms.Match("%d+%.%d+");
   else
     result = ms.Match("000[0-2]");
@@ -54,13 +56,18 @@ void parse_obis(int i)
   DEBUG("%d = %s", i, s.c_str());
   switch (i)
   {
-    case 0: msg.gas_used_total = s.toFloat(); break;
-    case 1: msg.kw_used_current = s.toFloat(); break;
-    case 2: msg.kw_returned_current = s.toFloat(); break;
-    case 3: msg.kw_tariff_current = s.toInt(); break;
+    case 0: msg.total_kwh_used_high = s.toFloat(); break;
+    case 1: msg.total_kwh_used_low = s.toFloat(); break;
+    case 2: msg.total_kwh_returned_high = s.toFloat(); break;
+    case 3: msg.total_kwh_returned_low = s.toFloat(); break;
+    case 4: msg.total_gas_used = s.toFloat(); break;
+    case 5: msg.current_used_kwh = s.toFloat(); break;
+    case 6: msg.current_returned_kwh = s.toFloat(); break;
+    case 7: msg.current_kwh_tariff = s.toInt(); break;
     default: return;
   }
 }
+
 
 void setup()
 {
@@ -97,10 +104,11 @@ void setup()
   DEBUG("Initialized");
 }
 
+
 void loop()
 {
   uint32_t now = timer_tick_count;
-  static uint8_t j = 0;
+  static uint8_t obis_index = 0;
   static bool telegram_ready = false;
   char c;
 
@@ -116,11 +124,11 @@ void loop()
 
   // if we are done parsing all the values from the telegram we can send the
   // data
-  if (j >= 4)
+  if (obis_index >= 8)
   {
     DEBUG("Sending telegram");
     tinymac_send(0, tinymacType_RawData, (const char*)&msg, sizeof(msg), 0, NULL);
-    j = 0;
+    obis_index = 0;
     telegram_ready = false;
   }
 
@@ -128,8 +136,8 @@ void loop()
   // make sure we stay within 250 ms.
   if (telegram_ready)
   {
-    parse_obis(j);
-    j++;
+    parse_obis(obis_index);
+    obis_index++;
   }
 
   // Capture serial data on the p1 port. We expect a telegram every 10 seconds
