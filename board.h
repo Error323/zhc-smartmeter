@@ -36,7 +36,7 @@
 #define TRX_SCK					B,5,1
 
 #define nTRX_IRQ				D,2,1
-#define LED						D,7,1
+#define P1						  D,7,1
 
 /* Analogue MUX inputs */
 #define ADC_MUX_VREF_1V1		14
@@ -53,11 +53,11 @@
 
 #define PORTB_INS				(MASK(TRX_MISO))
 #define PORTC_INS				(0)
-#define PORTD_INS				(MASK(nTRX_IRQ))
+#define PORTD_INS				(MASK(nTRX_IRQ) | MASK(P1))
 
 #define PORTB_PULLUP			(MASK(TRX_MISO))
 #define PORTC_PULLUP			(0)
-#define PORTD_PULLUP			(MASK(nTRX_IRQ))
+#define PORTD_PULLUP			(MASK(nTRX_IRQ) | MASK(P1))
 
 /*
  * Output definitions for each hardware port
@@ -65,7 +65,7 @@
 
 #define PORTB_OUTS				(MASK(TRX_SDN) | MASK(nTRX_SEL) | MASK(TRX_MOSI) | MASK(TRX_SCK))
 #define PORTC_OUTS				(0)
-#define PORTD_OUTS				(MASK(LED))
+#define PORTD_OUTS				(0)
 
 #define PORTB_INITIAL			(MASK(TRX_SDN) | MASK(nTRX_SEL))
 #define PORTC_INITIAL			(0)

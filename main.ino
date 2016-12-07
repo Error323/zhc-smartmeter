@@ -36,13 +36,22 @@ void parse_obis(int i)
   strcpy_P(obis, (char*)pgm_read_word(&obis_table[i]));
   int pos = telegram.indexOf(obis) + strlen(obis);
   ms.Target(&telegram[pos]);
-  char result = ms.Match("%d+%.%d+|000[0-2]");
+  char result;
+  
+  if (i < 3)
+    result = ms.Match("%d+%.%d+");
+  else
+    result = ms.Match("000[0-2]");
 
   if (!result)
+  {
+    DEBUG("Parse error %d for %s", result, obis);
     return;
+  }
   
   pos += ms.MatchStart;
   String s = telegram.substring(pos, pos + ms.MatchLength);
+  DEBUG("%d = %s", i, s.c_str());
   switch (i)
   {
     case 0: msg.gas_used_total = s.toFloat(); break;
@@ -55,7 +64,7 @@ void parse_obis(int i)
 
 void setup()
 {
-  p1.begin(9600);
+  INIT_DEBUG();
   telegram.reserve(MAX_TELEGRAM_SIZE);
 	tinymac_params_t params;
   params.uuid = 0x8000736d65746572ull;
@@ -84,14 +93,15 @@ void setup()
 
 	phy_init();
 	tinymac_init(&params);
+  p1.begin(9600);
+  DEBUG("Initialized");
 }
 
 void loop()
 {
   uint32_t now = timer_tick_count;
-  static uint8_t i = 0;
   static uint8_t j = 0;
-  static bool done = false;
+  static bool telegram_ready = false;
   char c;
 
   // Tinyhan tick must be called every 250 ms
@@ -108,14 +118,15 @@ void loop()
   // data
   if (j >= 4)
   {
+    DEBUG("Sending telegram");
     tinymac_send(0, tinymacType_RawData, (const char*)&msg, sizeof(msg), 0, NULL);
     j = 0;
-    done = false;
+    telegram_ready = false;
   }
 
   // if we are done receiving the message we parse one obis per loop cycle to
   // make sure we stay within 250 ms.
-  if (done)
+  if (telegram_ready)
   {
     parse_obis(j);
     j++;
@@ -126,20 +137,19 @@ void loop()
   {
     c = (char)p1.read();
     c &= 127;
-
     switch (c)
     {
       case '/': 
-        i = 0; 
+        telegram = c;
         break;
       case '!': 
-        done = true;
+        telegram += c;
+        telegram_ready = true;
+        DEBUG("length = %d", telegram.length());
         break;
       default: 
-        telegram[i++] = c; 
+        telegram += c; 
         break;
     }
-
-    i %= MAX_TELEGRAM_SIZE;
   }
 }
