@@ -38,7 +38,6 @@ typedef unsigned int boolean_t;
 
 #define DUMP(buf, size)
 
-/*
 static char __buf[64];
 #define DEBUG(...)                    \
   do {                                \
@@ -46,6 +45,7 @@ static char __buf[64];
     Serial.print("D: ");              \
     Serial.println(__buf);            \
   } while (0)
+/*
 #define INFO(...)                     \
   do {                                \
     snprintf(__buf, 64, __VA_ARGS__); \
@@ -63,10 +63,10 @@ static char __buf[64];
 #define TRACE(...)
 #define INFO(...)
 #define ERROR(...)
-#define DEBUG(...)
+//#define DEBUG(...)
 
-//#define INIT_DEBUG() Serial.begin(57600)
-#define INIT_DEBUG()
+#define INIT_DEBUG() Serial.begin(57600)
+//#define INIT_DEBUG()
 
 #define FUNCTION_TRACE
 

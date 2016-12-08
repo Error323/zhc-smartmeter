@@ -63,7 +63,7 @@ void parse_obis(int i)
     case 4: msg.total_gas_used = s.toFloat(); break;
     case 5: msg.current_used_kwh = s.toFloat(); break;
     case 6: msg.current_returned_kwh = s.toFloat(); break;
-    case 7: msg.current_kwh_tariff = s.toInt(); break;
+    case 7: msg.current_tariff_kwh = s.toInt(); break;
     default: return;
   }
 }
@@ -76,7 +76,7 @@ void setup()
 	tinymac_params_t params;
   params.uuid = 0x8000736d65746572ull;
   params.coordinator = FALSE;
-  params.flags = TINYMAC_ATTACH_FLAGS_SLEEPY | 4; // heartbeat every 16 seconds
+  params.flags = TINYMAC_ATTACH_FLAGS_SLEEPY | 7; // heartbeat every 128 seconds
 	next_mac_tick = 0;
 
 	MCUSR = 0;

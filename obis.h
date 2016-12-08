@@ -14,7 +14,7 @@ const char TABLE TOTAL_KWH_RETURNED_LOW[]  = "1-0:2.8.2";
 const char TABLE TOTAL_GAS_USED[]          = "0-1:24.2.0";
 const char TABLE CURRENT_USED_KWH[]        = "1-0:1.7.0";
 const char TABLE CURRENT_RETURNED_KWH[]    = "1-0:2.7.0";
-const char TABLE CURRENT_KWH_TARIFF[]      = "0-0:96.14.0";
+const char TABLE CURRENT_TARIFF_KWH[]      = "0-0:96.14.0";
 
 const char* const obis_table[] TABLE = {
   TOTAL_KWH_USED_HIGH, 
@@ -24,7 +24,7 @@ const char* const obis_table[] TABLE = {
   TOTAL_GAS_USED, 
   CURRENT_USED_KWH, 
   CURRENT_RETURNED_KWH, 
-  CURRENT_KWH_TARIFF
+  CURRENT_TARIFF_KWH
 };
 
 /*
@@ -58,5 +58,5 @@ struct telegram_t
   float total_gas_used;
   float current_used_kwh;
   float current_returned_kwh;
-  uint8_t current_kwh_tariff;
+  uint8_t current_tariff_kwh;
 } PACKED;
