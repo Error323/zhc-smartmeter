@@ -76,7 +76,7 @@ void setup()
 	tinymac_params_t params;
   params.uuid = 0x8000736d65746572ull;
   params.coordinator = FALSE;
-  params.flags = TINYMAC_ATTACH_FLAGS_SLEEPY | 7; // heartbeat every 128 seconds
+  params.flags = TINYMAC_ATTACH_FLAGS_SLEEPY | 8; // heartbeat every 256 seconds
 	next_mac_tick = 0;
 
 	MCUSR = 0;
