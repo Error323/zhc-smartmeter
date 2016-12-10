@@ -26,20 +26,15 @@ char obis[16];
 telegram_t msg;
 MatchState ms;
 
-
-void tick()
-{
-	timer_tick_count++;
-}
-
+void tick() { timer_tick_count++; }
 
 void parse_obis(int i)
 {
-  strcpy_P(obis, (char*)pgm_read_word(&obis_table[i]));
+  strcpy_P(obis, (char *)pgm_read_word(&obis_table[i]));
   int pos = telegram.indexOf(obis) + strlen(obis);
   ms.Target(&telegram[pos]);
   char result;
-  
+
   if (i < 7)
     result = ms.Match("%d+%.%d+");
   else
@@ -50,60 +45,75 @@ void parse_obis(int i)
     DEBUG("Parse error %d for %s", result, obis);
     return;
   }
-  
+
   pos += ms.MatchStart;
   String s = telegram.substring(pos, pos + ms.MatchLength);
   DEBUG("%d = %s", i, s.c_str());
   switch (i)
   {
-    case 0: msg.total_kwh_used_high = s.toFloat(); break;
-    case 1: msg.total_kwh_used_low = s.toFloat(); break;
-    case 2: msg.total_kwh_returned_high = s.toFloat(); break;
-    case 3: msg.total_kwh_returned_low = s.toFloat(); break;
-    case 4: msg.total_gas_used = s.toFloat(); break;
-    case 5: msg.current_used_kwh = s.toFloat(); break;
-    case 6: msg.current_returned_kwh = s.toFloat(); break;
-    case 7: msg.current_tariff_kwh = s.toInt(); break;
-    default: return;
+  case 0:
+    msg.total_kwh_used_high = s.toFloat();
+    break;
+  case 1:
+    msg.total_kwh_used_low = s.toFloat();
+    break;
+  case 2:
+    msg.total_kwh_returned_high = s.toFloat();
+    break;
+  case 3:
+    msg.total_kwh_returned_low = s.toFloat();
+    break;
+  case 4:
+    msg.total_gas_used = s.toFloat();
+    break;
+  case 5:
+    msg.current_used_kwh = s.toFloat();
+    break;
+  case 6:
+    msg.current_returned_kwh = s.toFloat();
+    break;
+  case 7:
+    msg.current_tariff_kwh = s.toInt();
+    break;
+  default:
+    return;
   }
 }
-
 
 void setup()
 {
   INIT_DEBUG();
   telegram.reserve(MAX_TELEGRAM_SIZE);
-	tinymac_params_t params;
+  tinymac_params_t params;
   params.uuid = 0x8000736d65746572ull;
   params.coordinator = FALSE;
   params.flags = TINYMAC_ATTACH_FLAGS_SLEEPY | 8; // heartbeat every 256 seconds
-	next_mac_tick = 0;
+  next_mac_tick = 0;
 
-	MCUSR = 0;
-	wdt_disable();
+  MCUSR = 0;
+  wdt_disable();
 
-	EIMSK = 0;
-	EICRA = 0;
+  EIMSK = 0;
+  EICRA = 0;
 
-	PORTB = PORTB_VAL;
-	PORTC = PORTC_VAL;
-	PORTD = PORTD_VAL;
-	DDRB = DDRB_VAL;
-	DDRC = DDRC_VAL;
-	DDRD = DDRD_VAL;
+  PORTB = PORTB_VAL;
+  PORTC = PORTC_VAL;
+  PORTD = PORTD_VAL;
+  DDRB = DDRB_VAL;
+  DDRC = DDRC_VAL;
+  DDRD = DDRD_VAL;
 
   MsTimer2::set(250, tick);
   MsTimer2::start();
   sei();
 
-	TRX_ON();
+  TRX_ON();
 
-	phy_init();
-	tinymac_init(&params);
+  phy_init();
+  tinymac_init(&params);
   p1.begin(9600);
   DEBUG("Initialized");
 }
-
 
 void loop()
 {
@@ -113,7 +123,7 @@ void loop()
   char c;
 
   // Tinyhan tick must be called every 250 ms
-  if ((int32_t)(now - next_mac_tick) >= 0) 
+  if ((int32_t)(now - next_mac_tick) >= 0)
   {
     next_mac_tick = now + 1;
     tinymac_tick_handler(NULL);
@@ -127,7 +137,8 @@ void loop()
   if (obis_index >= 8)
   {
     DEBUG("Sending telegram");
-    tinymac_send(0, tinymacType_RawData, (const char*)&msg, sizeof(msg), 0, NULL);
+    tinymac_send(0, tinymacType_RawData, (const char *)&msg, sizeof(msg), 0,
+                 NULL);
     obis_index = 0;
     telegram_ready = false;
   }
@@ -147,17 +158,17 @@ void loop()
     c &= 127;
     switch (c)
     {
-      case '/': 
-        telegram = c;
-        break;
-      case '!': 
-        telegram += c;
-        telegram_ready = true;
-        DEBUG("length = %d", telegram.length());
-        break;
-      default: 
-        telegram += c; 
-        break;
+    case '/':
+      telegram = c;
+      break;
+    case '!':
+      telegram += c;
+      telegram_ready = true;
+      DEBUG("length = %d", telegram.length());
+      break;
+    default:
+      telegram += c;
+      break;
     }
   }
 }

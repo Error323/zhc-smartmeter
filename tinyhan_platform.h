@@ -44,16 +44,16 @@
 /********************************/
 
 /*! Port definition for SPI select pin */
-#define nSELECT			nTRX_SEL
+#define nSELECT nTRX_SEL
 /*! Port definition for interrupt pin */
-#define nIRQ			nTRX_IRQ
+#define nIRQ nTRX_IRQ
 
 /***********************************/
 /* PLATFORM SPECIFIC CONFIGURATION */
 /***********************************/
 
 /*! Delay for specified number of ms */
-#define DELAY_MS(a)		_delay_ms(a)
+#define DELAY_MS(a) _delay_ms(a)
 
 /*! Wait for a transceiver interrupt (may be empty for
  * platforms which rely on polling)
@@ -61,10 +61,10 @@
 #define WAIT_EVENT()
 
 /*! Qualifier for tables stored in ROM */
-#define TABLE			PROGMEM
+#define TABLE PROGMEM
 
 /*! Access macro for tables stored in ROM */
-#define TABLE_READ(a)	pgm_read_byte(a)
+#define TABLE_READ(a) pgm_read_byte(a)
 
 /*******************/
 /* Platform extras */
@@ -84,26 +84,28 @@
 /*******/
 
 /*! Function to assert SPI select */
-#define SELECT()		CLEARP(nSELECT)
+#define SELECT() CLEARP(nSELECT)
 
 /*! Function to release SPI select */
-#define DESELECT()		SETP(nSELECT)
+#define DESELECT() SETP(nSELECT)
 
 /*! Initialise SPI device */
-#define SPI_INIT()		{ \
-						SPCR = 0; \
-						SPSR = 0; \
-						SPCR = _BV(SPE) | _BV(MSTR); /* 2 MHz clock (/4) */ \
-						}
+#define SPI_INIT()                                                             \
+  {                                                                            \
+    SPCR = 0;                                                                  \
+    SPSR = 0;                                                                  \
+    SPCR = _BV(SPE) | _BV(MSTR); /* 2 MHz clock (/4) */                        \
+  }
 
 /*! Perform single byte transfer on SPI device */
-#define SPI_IO(a)		spi_io(a)
+#define SPI_IO(a) spi_io(a)
 
 static inline uint8_t spi_io(uint8_t data)
 {
-	SPDR = data;
-	while (!(SPSR & _BV(SPIF)));
-	return SPDR;
+  SPDR = data;
+  while (!(SPSR & _BV(SPIF)))
+    ;
+  return SPDR;
 }
 
 /********************/
@@ -111,9 +113,9 @@ static inline uint8_t spi_io(uint8_t data)
 /********************/
 
 /*! Function to enter shutdown */
-#define POWER_DOWN()	SETP(TRX_SDN)
+#define POWER_DOWN() SETP(TRX_SDN)
 
 /*! Function to release shutdown */
-#define POWER_UP()		CLEARP(TRX_SDN)
+#define POWER_UP() CLEARP(TRX_SDN)
 
 #endif /* TINYHAN_PLATFORM_H_ */

@@ -7,24 +7,19 @@
 
 // P1 Addresses (OBIS references) according to the dutch standard table
 // definition
-const char TABLE TOTAL_KWH_USED_HIGH[]     = "1-0:1.8.1";
-const char TABLE TOTAL_KWH_USED_LOW[]      = "1-0:1.8.2";
+const char TABLE TOTAL_KWH_USED_HIGH[] = "1-0:1.8.1";
+const char TABLE TOTAL_KWH_USED_LOW[] = "1-0:1.8.2";
 const char TABLE TOTAL_KWH_RETURNED_HIGH[] = "1-0:2.8.1";
-const char TABLE TOTAL_KWH_RETURNED_LOW[]  = "1-0:2.8.2";
-const char TABLE TOTAL_GAS_USED[]          = "0-1:24.2.0";
-const char TABLE CURRENT_USED_KWH[]        = "1-0:1.7.0";
-const char TABLE CURRENT_RETURNED_KWH[]    = "1-0:2.7.0";
-const char TABLE CURRENT_TARIFF_KWH[]      = "0-0:96.14.0";
+const char TABLE TOTAL_KWH_RETURNED_LOW[] = "1-0:2.8.2";
+const char TABLE TOTAL_GAS_USED[] = "0-1:24.2.0";
+const char TABLE CURRENT_USED_KWH[] = "1-0:1.7.0";
+const char TABLE CURRENT_RETURNED_KWH[] = "1-0:2.7.0";
+const char TABLE CURRENT_TARIFF_KWH[] = "0-0:96.14.0";
 
-const char* const obis_table[] TABLE = {
-  TOTAL_KWH_USED_HIGH, 
-  TOTAL_KWH_USED_LOW, 
-  TOTAL_KWH_RETURNED_HIGH, 
-  TOTAL_KWH_RETURNED_LOW, 
-  TOTAL_GAS_USED, 
-  CURRENT_USED_KWH, 
-  CURRENT_RETURNED_KWH, 
-  CURRENT_TARIFF_KWH
+const char *const obis_table[] TABLE = {
+  TOTAL_KWH_USED_HIGH,    TOTAL_KWH_USED_LOW, TOTAL_KWH_RETURNED_HIGH,
+  TOTAL_KWH_RETURNED_LOW, TOTAL_GAS_USED,     CURRENT_USED_KWH,
+  CURRENT_RETURNED_KWH,   CURRENT_TARIFF_KWH
 };
 
 /*
@@ -47,9 +42,9 @@ const char* const obis_table[] TABLE = {
  0-1:24.3.0(131223100000)(00)(60)(1)(0-1:24.2.0)(m3)
  (00490.415)
  0-1:24.4.0(1)
- ! 
+ !
 */
-struct telegram_t 
+struct telegram_t
 {
   float total_kwh_used_high;
   float total_kwh_used_low;

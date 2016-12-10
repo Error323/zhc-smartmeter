@@ -29,15 +29,16 @@
 #include <stdint.h>
 
 /*! Buffer list fragment */
-typedef struct {
-	char *buf;		/*< Pointer to this buffer fragment */
-	size_t size;	/*< Size of this buffer fragment */
+typedef struct
+{
+  char *buf;   /*< Pointer to this buffer fragment */
+  size_t size; /*< Size of this buffer fragment */
 } phy_buf_t;
 
 /*! This packet is to be sent immediately (no clear channel assessment) */
-#define PHY_FLAG_IMMEDIATE		(1 << 0)
+#define PHY_FLAG_IMMEDIATE (1 << 0)
 
-#define PHY_RSSI_NONE			0
+#define PHY_RSSI_NONE 0
 
 /*!
  * Definition of function to be called when a packet is received.
@@ -45,7 +46,7 @@ typedef struct {
  * \param size		Size of received packet (bytes)
  * \param rssi		Received signal strength (dBm), or 0 if not supported
  */
-typedef void(*phy_recv_cb_t)(const char *buf, size_t size, int rssi);
+typedef void (*phy_recv_cb_t)(const char *buf, size_t size, int rssi);
 
 /*!
  * Initialise the PHY

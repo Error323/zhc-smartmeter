@@ -70,7 +70,7 @@ static char __buf[64];
 
 #define FUNCTION_TRACE
 
-#define PACKED			__attribute__((packed))
-#define ARRAY_SIZE(a)	(sizeof(a) / sizeof(a[0]))
+#define PACKED __attribute__((packed))
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
 #endif /* COMMON_H_ */
